@@ -5,6 +5,7 @@ import argparse
 
 passlist = []
 
+# Hash defines
 md5 = "md5"
 sha1 = "sha1"
 sha224 = "sha224"
@@ -12,12 +13,11 @@ sha256 = "sha256"
 sha384 = "sha384"
 sha512 = "sha512"
 
+# Argparse stuff
 parser = argparse.ArgumentParser(description='Create Rainbow Tables With A Supplied Password List.')
-
 parser.add_argument('-p', '--pass_list', help='full path to password list.')
 parser.add_argument('-o', '--out_file', help='Name of file to write new rainbow tables to.')
 parser.add_argument('-e', '--hash', help='Hash type. Hashes supported [md5, sha1, sha224, sha256, sha384, sha512]')
-
 args = parser.parse_args()
 
 # Usage: (hash, word) = get_hash(md5, "secret word, or itterate wordlist")
@@ -43,7 +43,6 @@ def get_hash(hash_type, word):
         hash =  m.hexdigest()
         return(hash, word)
 
-
 # Read all entries in password list and add them to passlist
 def read_password_list(path_to_wordlist):
     with open(path_to_wordlist, "r") as infile:
@@ -51,7 +50,6 @@ def read_password_list(path_to_wordlist):
             if line != "" and line != '\n':
                 passlist.append(line[:-1])
     infile.close()
-
 
 # Writes the word, hash to Defined txt/lst file in {word}:{hash} format
 def rainbow_table_append(word, hash, file_name):
@@ -61,26 +59,25 @@ def rainbow_table_append(word, hash, file_name):
             infile.write("{0}:{1}\r\n".format(word, hash))
         infile.close()
 
-
 def main():
     if args.pass_list and args.out_file and args.hash:
         pass_txt = args.pass_list
         out_txt  = args.out_file
         hash     = args.hash
         try:
+            # create password list
             read_password_list(pass_txt)
         except:
             print("\n\n[#] Error: Make sure you're providing a full path to the password file.\n\n")
             exit(0)
-
         try:
-
             for password in passlist:
+                # itterate through password list while hashing the passwords
                 hash, word = get_hash(hash, password)
+                # write new rainbow tables {password}:{hash} format
                 rainbow_table_append(word, hash, out_txt)
         except:
             raise
-
     else:
         parser.print_help()
 
