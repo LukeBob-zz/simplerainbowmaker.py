@@ -1,5 +1,5 @@
-#Simple Rainbow Maker#
+# Simple Rainbow Maker #
 
-##usage##
+## usage ##
 
 ***python rainbowmaker.py -p password.lst -o outfile.txt -e md5***
